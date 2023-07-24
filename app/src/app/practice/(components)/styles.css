@@ -1,0 +1,11 @@
+.ql-toolbar, .ql-tooltip, .ql-clipboard {
+    @apply hidden
+}
+
+.quill pre {
+    @apply p-2 rounded
+}
+
+.quill code {
+    @apply px-1 rounded
+}
