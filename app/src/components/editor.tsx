@@ -1,8 +1,8 @@
 "use client";
 import { DarkModeContext } from "@/context/darkmode";
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
-import { Button, Container, IconButton, Menu, MenuItem, Tab, Tabs } from "@mui/material";
-import { useContext, useEffect, useState, MouseEvent, ChangeEvent, Dispatch, SetStateAction } from "react";
+import { Button, IconButton, Menu, MenuItem, Tab, Tabs } from "@mui/material";
+import { useContext, useEffect, useState, MouseEvent } from "react";
 import themes from "../../monaco-themes/themelist.json";
 import { CgCPlusPlus } from "react-icons/cg";
 import { LiaJava, LiaPython } from "react-icons/lia";
@@ -166,7 +166,7 @@ export default function Editor({ problem }: { problem?: Problem }) {
       }, "");
       payloadVal = template.replace("/* USER IMPLEMENTATION */", val).replace('""" USER IMPLEMENTATION """', val);
       test_cases = generateTestCases(problem, 0);
-      console.log(payloadVal);
+      console.log(test_cases);
     }
     try {
       const { token } = await fetch(`${judge0URL}/submissions`, {
