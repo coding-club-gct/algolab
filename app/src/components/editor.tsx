@@ -190,8 +190,8 @@ export default function Editor({ problem }: { problem?: Problem }) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
         } while (status.id === 1 || status.id === 2);
-        const { stdout, stderr } = await fetch(`${judge0URL}/submissions/${token}`).then((res) => res.json());
-        setSubmissions((prev) => [{ language: lang.language, val: stdout ?? stderr, time: Date.now(), status: status.description }, ...prev]);
+        const { stdout, stderr, compile_output } = await fetch(`${judge0URL}/submissions/${token}`).then((res) => res.json());
+        setSubmissions((prev) => [{ language: lang.language, val: stdout ?? stderr ?? compile_output, time: Date.now(), status: status.description }, ...prev]);
         setSubStatus(null);
       }
     } catch (error) {
@@ -202,15 +202,18 @@ export default function Editor({ problem }: { problem?: Problem }) {
     console.log(submissions);
   }, [submissions]);
   useEffect(() => {
-    if (!problem) return;
-    setVal((prev) => {
-      return Object.entries(problem).reduce((str, [key, val]) => {
-        if (key.split("_body")[0] === lang.language) {
-          str = val;
-        }
-        return str;
-      }, prev);
-    });
+    if (!problem) {
+      setVal("")
+    } else {
+      setVal((prev) => {
+        return Object.entries(problem).reduce((str, [key, val]) => {
+          if (key.split("_body")[0] === lang.language) {
+            str = val;
+          }
+          return str;
+        }, prev);
+      });
+    }
   }, [problem, lang]);
   useEffect(() => {
     console.log(subStatus);
