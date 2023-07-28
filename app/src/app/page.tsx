@@ -28,7 +28,7 @@ export default function Home() {
           <DarkModeSwitcher />
         </div>
       </Appbar>
-      <Container className="flex flex-col md:flex-row [&>*]:w-full md:[&>*]:w-1/2 min-h-[calc(100vh-4rem)] gap-12">
+      <Container className="flex flex-col md:flex-row [&>*]:w-full md:[&>*]:w-1/2 h-[calc(100vh-4rem)] gap-12">
         <div className="flex justify-center flex-col h-full">
           <Header />
           <Divider className="my-4" />
