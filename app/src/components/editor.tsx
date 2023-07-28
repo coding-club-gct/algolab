@@ -1,7 +1,7 @@
 "use client";
 import { DarkModeContext } from "@/context/darkmode";
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
-import { Button, IconButton, Menu, MenuItem, Tab, Tabs } from "@mui/material";
+import { Button, Drawer, IconButton, Menu, MenuItem, Tab, Tabs, dividerClasses } from "@mui/material";
 import { useContext, useEffect, useState, MouseEvent } from "react";
 import themes from "../../monaco-themes/themelist.json";
 import { CgCPlusPlus } from "react-icons/cg";
@@ -88,7 +88,7 @@ const SubmissionBox = ({ langName, time, status, current }: { langName: string; 
   const { Icon, language } = languages.find(({ language }) => language === langName)!;
   const catppuccinColor = useContext(CatppuccinContext);
   return (
-    <div style={{ background: current ? catppuccinColor.base : catppuccinColor.mantle, borderColor: catppuccinColor.text }} className="p-4 cursor-pointer w-full border-0 border-b-[1px] border-solid flex flex-col gap">
+    <div style={{ background: current ? catppuccinColor.base : catppuccinColor.mantle }} className="p-4 cursor-pointer w-full flex flex-col gap">
       <div className="flex gap-2 items-center my-0 py-0 [&>*]:my-0">
         <Icon size="1.5rem"></Icon>
         <p className="capitalize">{language}</p>
@@ -114,6 +114,7 @@ export default function Editor({ problem }: { problem?: Problem }) {
   const { darkMode } = useContext(DarkModeContext);
   const [themeAnchor, setThemeAnchor] = useState<null | HTMLElement>(null);
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
+  const [drawerAnchor, setDrawerAnchor] = useState(false)
   const [tab, setTab] = useState(0);
   const [supportedLangs, setSupportedLangs] = useState<
     {
@@ -233,6 +234,17 @@ export default function Editor({ problem }: { problem?: Problem }) {
       setForeground(theme.theme.colors["editor.foreground"]);
     }
   }, [theme, monaco]);
+
+  const SubmissionsList = () => <div style={{ background: catppuccinColor.mantle, borderColor: catppuccinColor.mantle }} className="flex flex-col h-full w-[180px] overflow-y-auto scrollbar-thin border-0 border-r-[1px] border-solid">
+    {currentSubmission && (
+      submissions.map(({ language, time, status }, key) => (
+        <div onClick={() => setCurrentSubmission(submissions[key])} key={key}>
+          <SubmissionBox current={currentSubmission.time === time} langName={language} time={time} status={status}></SubmissionBox>
+        </div>
+      ))
+    )}
+  </div>
+
   return supportedLangs.length ? (
     <div className="h-screen flex flex-col">
       <Tabs value={tab} onChange={(e: React.SyntheticEvent, newTab: number) => setTab(newTab)}>
@@ -289,32 +301,36 @@ export default function Editor({ problem }: { problem?: Problem }) {
           </div>
         </>
       ) : tab === 1 && !problem ? (
-        <div className="p-4 h-full w-full">
-          <div className="flex h-full gap-4">
-            <p className="text-sm w-1/3 h-full">
+        <div className="p-4 h-[calc(100%-14px)] w-full">
+          <div className="flex flex-col md:flex-row h-full gap-4">
+            <p className="text-sm w-full md:w-1/3">
               The textbox on the website acts as a virtual keyboard or input field for users. Users can enter data into the textbox, which serves as input for the underlying program or algorithm running on the editor. The program processes
               the entered data to perform specific tasks or calculations, displaying the results or using them for various functionalities on the website.
             </p>
-            <div style={{ backgroundColor: background }} className="h-full w-2/3 py-4">
+            <div style={{ backgroundColor: background }} className="h-full w-full md:w-2/3 py-4">
               <MonacoEditor value={stdin} theme={theme.themeName} options={{ fontSize: 16 }} onChange={(value, event) => setStdin((prev) => value || prev)} language="plain text" className="w-full h-full" />
             </div>
           </div>
         </div>
       ) : (
-        <div className="flex justify-center h-[calc(100%-3rem)]">
-          <div style={{ background: catppuccinColor.mantle, borderColor: catppuccinColor.mantle }} className="flex flex-col h-full w-[180px] overflow-y-auto scrollbar-thin border-0 border-r-[1px] border-solid">
-            {submissions.length && currentSubmission ? (
-              submissions.map(({ language, time, status }, key) => (
-                <div onClick={() => setCurrentSubmission(submissions[key])} key={key}>
-                  <SubmissionBox current={currentSubmission.time === time} langName={language} time={time} status={status}></SubmissionBox>
-                </div>
-              ))
-            ) : (
-              <p className="m-4"> No submissions yet </p>
-            )}
+        <div className="h-[calc(100%-3rem)] md:flex justify-center">
+          <div className="md:hidden">
+            <div className="flex items-center h-16">
+              {submissions.length ? <Button className="mx-4 !text-base" onClick={() => setDrawerAnchor(prev => !prev)}> {drawerAnchor ? "Close drawer" : "See all submissions"} </Button> : <p className="m-4">
+                No submissions yet
+              </p>}
+            </div>
+            <Drawer anchor="left" open={drawerAnchor} onClose={() => setDrawerAnchor(false)}>
+              <SubmissionsList />
+            </Drawer>
           </div>
-          <div className="h-full w-[calc(100%-180px)] p-4" style={{ background: catppuccinColor.base }}>
-            {currentSubmission && <p> {currentSubmission.val} </p>}
+          <div className="w-[180px] h-full hidden md:block">
+            {submissions.length ? <SubmissionsList /> : <p className="m-4"> No submissions yet </p>}
+          </div>
+          <div className="md:w-[calc(100%-180px)] h-[calc(100%-4rem)] md:h-full">
+            <div className="h-full w-full p-4" style={{ background: catppuccinColor.base }}>
+              {currentSubmission && <p> {currentSubmission.val} </p>}
+            </div>
           </div>
         </div>
       )}
