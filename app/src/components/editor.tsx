@@ -51,7 +51,7 @@ function timeAgo(epochTimestamp: number): string {
   }
 }
 
-const languages = [
+export const languages = [
   {
     Icon: CgCPlusPlus,
     language: "cpp",
@@ -128,15 +128,15 @@ export default function Editor({ problem }: { problem?: Problem }) {
   }>(
     darkMode
       ? {
-          themeName: "drakula",
-          fileName: "Dracula",
-          theme: require("../../monaco-themes/Dracula.json"),
-        }
+        themeName: "drakula",
+        fileName: "Dracula",
+        theme: require("../../monaco-themes/Dracula.json"),
+      }
       : {
-          themeName: "github-light",
-          fileName: "GitHub Light",
-          theme: require("../../monaco-themes/GitHub Light.json"),
-        }
+        themeName: "github-light",
+        fileName: "GitHub Light",
+        theme: require("../../monaco-themes/GitHub Light.json"),
+      }
   );
   const [background, setBackground] = useState(theme.theme.colors["editor.background"]);
   const [foreground, setForeground] = useState(theme.theme.colors["editor.foreground"]);
@@ -183,8 +183,9 @@ export default function Editor({ problem }: { problem?: Problem }) {
       if (token) {
         let status: any;
         do {
-          ({ status } = await fetch(`${judge0URL}/submissions/${token}`).then((res) => res.json()));
-          console.log(status);
+          const resp = await fetch(`${judge0URL}/submissions/${token}`).then((res) => res.json())
+          console.log(resp);
+          ({ status } = resp)
           setSubStatus(status.description);
           if (status.id !== 1 || status.id !== 2) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
