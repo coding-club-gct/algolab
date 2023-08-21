@@ -3,9 +3,15 @@
 import { CatppuccinContext } from "@/context/catppuccin";
 import Editor from "@/components/editor";
 import { useContext, useEffect, useState } from "react";
-import ReactQuill from "react-quill";
 import "./styles.css";
 import { Tab, Tabs } from "@mui/material";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(import("react-quill"), {
+  ssr: false,
+  loading: () => <p> Loading please wait... </p>
+})
+
 export const ProblemsList = ({ data }: { data: Problems }) => {
   const catppuccinColor = useContext(CatppuccinContext);
   const [currentProblem, setCurrentProblem] = useState(data[0]);
