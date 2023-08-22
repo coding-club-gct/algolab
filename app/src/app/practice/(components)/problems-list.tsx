@@ -7,7 +7,7 @@ import "./styles.css";
 import { Tab, Tabs } from "@mui/material";
 import dynamic from "next/dynamic";
 
-const ReactQuill = dynamic(import("react-quill"), {
+const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => <p> Loading please wait </p>
 })
@@ -18,7 +18,7 @@ export const ProblemsList = ({ data }: { data: Problems }) => {
   const [tabVal, setTabVal] = useState(0)
   useEffect(() => {
     const quill = document.getElementsByClassName("quill")[0];
-    if(!quill) return
+    if (!quill) return
     const codeTags = quill.getElementsByTagName("code");
     Array.from(codeTags).forEach((codeTag) => {
       codeTag.style.background = catppuccinColor.base;
