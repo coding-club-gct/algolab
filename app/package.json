@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@coding-club-gct/theme": "latest",
+    "@coding-club-gct/theme": "1.1.7",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.5.1",
@@ -17,9 +17,10 @@
     "@types/node": "20.4.3",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
-    "@types/react-kawaii": "^0.17.0",
+    "@types/react-kawaii": "latest",
     "autoprefixer": "10.4.14",
     "colorsea": "^1.2.1",
+    "monaco-editor": "^0.44.0",
     "next": "13.4.12",
     "postcss": "8.4.27",
     "react": "18.2.0",

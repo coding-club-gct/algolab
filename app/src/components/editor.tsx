@@ -1,6 +1,7 @@
 "use client";
+
 import { DarkModeContext } from "@/context/darkmode";
-import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
+import { Editor as MonacoEditor, useMonaco, loader } from "@monaco-editor/react";
 import { Button, Drawer, IconButton, Menu, MenuItem, Tab, Tabs, dividerClasses } from "@mui/material";
 import { useContext, useEffect, useState, MouseEvent } from "react";
 import themes from "../../monaco-themes/themelist.json";
@@ -11,6 +12,8 @@ import { TbBrandGolang, TbBrandRust } from "react-icons/tb";
 import { BsPlay } from "react-icons/bs";
 import { judge0URL } from "@/constants";
 import { CatppuccinContext } from "@/context/catppuccin";
+
+loader.config({ paths: { vs: "/vs" } })
 
 const shouldAddNewLine = (arr: any[], i: number) => (arr.length && arr.length - i - 1 !== 0 ? "\n" : "");
 
